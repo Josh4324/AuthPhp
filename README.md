@@ -8,6 +8,20 @@
 
 4. Open the XAMMP control panel and start the apache server
 
-5. To test Super Admin functions
+5. Testing
+
+   - For the reset password email, the reset link starts with localhost:81 , change to appropriate one on your system
+
+6. To test Super Admin functions
 
    - Use email - adesanyajoshua@ymail.com password - 12345
+
+7. To test Medical Team functions
+
+   - use email - adaobi@yahoo.com password - 12345
+
+8. To test Patients functions
+
+   - use email dot@yahoo.com password - 12345
+
+9. You can register new users and test as well
