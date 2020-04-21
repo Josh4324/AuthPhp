@@ -1,5 +1,8 @@
 <?php
 session_start();
+require_once("functions/alert.php");
+require_once("functions/redirect.php");
+require_once("functions/users.php");
 
 // collecting data
 $email = $_POST['email'];
@@ -18,23 +21,18 @@ $_SESSION['email'] = $email;
 // checking error count and displaying appropriate message
 if ($errorCount == 1) {
     //Give feedback to user
-    $_SESSION["error"] = "You have " . $errorCount . " error in your form submission";
-    header("Location: login.php");
+    set_alert("error","You have " . $errorCount . " error in your form submission");
+    redirect("login.php");
 }else if($errorCount > 1){
-    $_SESSION["error"] = "You have " . $errorCount . " errors in your form submission";
-    header("Location: login.php");
+    set_alert("error","You have " . $errorCount . " errors in your form submission");
+    redirect("login.php");
 }
 else {
-    //Get and count all users
-    $allUsers = scandir("db/users");
-    $countAllUsers = count($allUsers);
-
-    //check if the user already exists.
-    for ($counter = 0; $counter < $countAllUsers; $counter++){
-        $currentUser = $allUsers[$counter];
-        if($currentUser == $email .".json"){
+    $userExists = find_user($email);
+    
+        if($userExists){
             // get user fro the database
-            $userString = file_get_contents("db/users/" . $currentUser);
+            $userString = file_get_contents("db/users/" . $email .".json");
             // decode user
             $userObject = json_decode($userString);
             $passwordFromDb = $userObject->password;
@@ -46,6 +44,8 @@ else {
 
                 $_SESSION['loggedIn'] = $userObject->id;
                 $_SESSION["fullname"] = $userObject->first_name . " " . $userObject->last_name;
+                $_SESSION["firstname"] = $userObject->first_name;
+                $_SESSION["lastname"] =$userObject->last_name;
                 $_SESSION["role"] = $userObject->designation;
                 $_SESSION["department"] = $userObject->department;
                 $_SESSION["date-of-registration"] = $userObject->dateofregistration;
@@ -64,15 +64,15 @@ else {
                 
                 // redirect user to patients dashboard if user is a patient
                 if($userObject->designation == 'Patients'){
-                    header("Location: patient.php");
+                    redirect("patient.php");
                     die();
                 // redirect user to Medical Team dashboard if user is part of the Medical Team
                 }else if ($userObject->designation == 'Medical Team') {
-                    header("Location: mt.php");
+                    redirect("mt.php");
                     die();
                 // redirect user to Super Admin Dashboard
                 }else {
-                    header("Location: dashboard.php");
+                    redirect("dashboard.php");
                     die();
                 }
                
@@ -81,10 +81,10 @@ else {
            
         }
          
-    }
+  
 
-    $_SESSION["error"] = "Invalid Email or Password";
-    header("Location: login.php");
+    set_alert("error","Invalid Email or Password");
+    redirect("login.php");
     die();
 
 }

@@ -1,30 +1,29 @@
-<?php  
+<?php     
     include_once("lib/header.php"); 
+    require_once("functions/alert.php");
+    require_once("functions/users.php");
     //redirect to dashboard if the user is already logged in
-    if (isset($_SESSION['loggedIn']) && !empty($_SESSION['loggedIn'])){
+    if (is_user_loggedIn()){
     header("Location: dashboard.php");
     }
 ?>
-
-<h3>Register</h3>
-    <p>Welcome, Please Register</p>
-    <p>All Fields are required</p>
-
-<form method="POST" action="processregister.php">
-    <p>
-    <?php
+<p>
+        <?php
         //display error message if vallidation fails
-        if(isset($_SESSION['error']) && !empty($_SESSION['error'])){
-            echo "<span style='color:red'>" . $_SESSION['error'] . "</span";    
-            // session_unset
-            session_destroy();
-        }
-    ?>
+        print_alert();
+        ?>
     </p>
 
-    <p>
+
+<form method="POST" action="processregister.php" class=" shadow px-3 pb-3 mb-3 form mt-4">
+    
+    <h3 class="text-center pt-2">Register</h3>
+    <p class="text-center">All Fields are required</p>
+    <hr>
+
+    <p class="form-group">
         <label for="">First name</label>
-        <input 
+        <input  class="form-control"
         value="<?php 
                     //display firstname if saved in session
                     if(isset($_SESSION['first_name'])){
@@ -35,9 +34,9 @@
         title="Name should not have numbers, less than 2 or blank" required>
     </p>
 
-    <p>
+    <p class="form-group">
         <label for="">Last name</label>
-        <input 
+        <input class="form-control"
         value="<?php
                     //display last name if saved in session 
                     if(isset($_SESSION['last_name'])){
@@ -46,11 +45,11 @@
                 ?>"
         type="text" name="last_name" placeholder="Last Name"  
         title="Name should not have numbers, less than 2 or blank" pattern="^[a-zA-Z]{2,}$" required>
-        </p>
+    </p>
 
-    <p>
+    <p class="form-group">
         <label for="">Email</label>
-        <input 
+        <input class="form-control"
         value="<?php
                     //display email if saved in session  
                     if(isset($_SESSION['email'])){
@@ -58,18 +57,18 @@
                     } 
                 ?>"
         type="email" name="email" placeholder="Email" >
-        </p>
+    </p>
 
-    <p>
+    <p class="form-group">
         <label for="">Password</label>
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
     </p>
 
     <hr />
 
-    <p>
+    <p class="form-group">
         <label for="">Gender</label>
-        <select name="gender" required>
+        <select name="gender" class="form-control" required>
             <option value="">Select One</option>
             <option
             <?php
@@ -91,9 +90,9 @@
         </select>
     </p>
 
-    <p>
+    <p class="form-group">
         <label for="">Designation</label>
-        <select name="designation" required>
+        <select name="designation" class="form-control" required>
             <option value="">Select One</option>
             <option
             <?php
@@ -114,9 +113,9 @@
         </select>
     </p>
 
-    <p>
+    <p class="form-group">
         <label for="">Department</label>
-        <input required
+        <input required class="form-control"
         <?php
             //display department if saved in session 
             if(isset($_SESSION['department'])){
@@ -126,9 +125,14 @@
         type="text" name="department" placeholder="Department" required />
     </p>
 
-    <p>
-        <button type="submit">Register</button>
+    <p class="form-group">
+        <button class="form-control bg-primary text-white" type="submit">Register</button>
     </p>
+
+    <p class="text-center">
+        <a  href="login.php">Already Have an account? Log In</a>
+    </p>
+    
     </form>
 
 <?php include_once("lib/footer.php") ?>

@@ -1,34 +1,27 @@
 <?php 
    include_once("lib/header.php");
+   require_once("functions/alert.php");
+   require_once("functions/users.php");
+
    //redirect to dashboard if the user is already logged in
-   if (isset($_SESSION['loggedIn']) && !empty($_SESSION['loggedIn'])){
+   if (is_user_loggedIn()){
    //redirect to dashboard
    header("Location: dashboard.php");
-}
+   }
 ?>
    
 <p>
-<?php
-   //display success message if vallidation pass
-   if(isset($_SESSION['message']) && !empty($_SESSION['message'])){
-      echo "<span style='color:green'>" . $_SESSION['message'] . "</span";    
-      // session_unset - Empty Session Object
+   <?php
+      //display success message if vallidation pass or error message if vallidation fails
+      print_alert();
       session_destroy();
-   }
-?>
-<?php
-   //display error message if vallidation fails
-   if(isset($_SESSION['error']) && !empty($_SESSION['error'])){
-      echo "<span style='color:red'>" . $_SESSION['error'] . "</span";    
-      // session_unset - Empty Session Object
-      session_destroy();
-   }
-?>
+   ?>
 </p>
 
-<h3>Login</h3>
-<form action="processlogin.php" method="POST">
-   <p>
+
+<form action="processlogin.php" method="POST" class=" shadow form pt-2 mt-5 px-3 pb-3">
+<h3 class="text-center">Login</h3>
+   <p class="form-group">
       <label for="">Email</label>
          <input 
          value="<?php 
@@ -37,16 +30,19 @@
                      echo(!empty($_SESSION['email']) ? $_SESSION['email'] : " ");
                   } 
             ?>"
-         type="email" name="email" placeholder="Email" >
+         type="email" class="form-control" name="email" placeholder="Email" >
    </p>
 
-   <p>
+   <p v>
       <label for="">Password</label>
-      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" class="form-control" name="password" placeholder="Password" required>
    </p>
 
-   <p>
-      <button type="submit">Login</button>
+   <p class="text-center"><a href="forgot.php">Forget Password</a> </p>
+   <p class="text-center"><a href="register.php">Dont have an Account ? Register</a> </p>
+
+   <p class="form-group">
+      <button class="form-control text-white bg-primary" type="submit">Login</button>
    </p>
    
    </form>

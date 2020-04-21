@@ -1,10 +1,15 @@
 <?php session_start();
+      require_once("functions/users.php");
+      require_once("functions/alert.php");
+      require_once("functions/redirect.php");
+      require_once("functions/email.php");
+      require_once("functions/token.php");
 
 // error count
 $errorCount = 0;
 
 // get token if user is not loggedIn
-if(!$_SESSION['loggedIn']){
+if(!is_user_loggedIn()){
     $token = $_POST['token'];
     $token == "" ? $errorCount++ : $token;
     $_SESSION['token'] = $token;
@@ -24,127 +29,64 @@ $_SESSION['email'] = $email;
 // checking error count and displaying appropriate message
 if ($errorCount == 1) {
     //Give feedback to user
-    $_SESSION["error"] = "You have " . $errorCount . " error in your form submission";
-    header("Location: reset.php");
+    set_alert("error","You have " . $errorCount . " error in your form submission");
+    redirect("reset.php");
 }else if($errorCount > 1){
-    $_SESSION["error"] = "You have " . $errorCount . " errors in your form submission";
-    header("Location: reset.php");
+    set_alert("error","You have " . $errorCount . " errors in your form submission");
+    redirect("reset.php");
 }else {
-    
-    // check that the email is regustered in tokens folder
-    $allUsersTokens = scandir("db/tokens");
-    $countAllUsersTokens = count($allUsersTokens);
-    
 
-    for ($counter = 0; $counter < $countAllUsersTokens; $counter++){
-        $currentTokenFile = $allUsersTokens[$counter];
-       
-        if($currentTokenFile == $email .".json"){
-            $usertoken = file_get_contents("db/tokens/" . $currentTokenFile);
-            $tokenObject = json_decode($usertoken);
-            $tokenFrmDB = $tokenObject->token;
+    if(is_user_loggedIn()){
+        $checkToken = true;
+    }else{
+        $tokenFrmDb = find_token($email);
+        if ($tokenFrmDb == $token){
+            $checkToken = true;
+       }
+    }
 
-
-            //Make it better
-            if($_SESSION['loggedIn']){
-                $checkToken = true;
-            }else{
-                $checkToken = $tokenFrmDB == $token;
-            }
-            
-            if($checkToken){
-                $allUsers = scandir("db/users");
-                $countAllUsers = count($allUsers);
+    if($checkToken){
                 
-            
-                //check if the user already exists.
-                for ($counter = 0; $counter < $countAllUsers; $counter++){
-                    $currentUser = $allUsers[$counter];
-                    if($currentUser == $email .".json"){
-                        $userString = file_get_contents("db/users/" . $currentUser);
-                        $userObject = json_decode($userString);
-
-                        $userObject->password = password_hash($password, PASSWORD_DEFAULT);
-                        unlink("db/users/" . $currentUser); //delete previous file
-
-                        
-                        file_put_contents( "db/users/" . $email . ".json", json_encode($userObject));
-                        
-
-                        //imform user of password reset
-                       
-                        $subject = "Password Reset Successful";
-                        $message = "Your account on smh has been updated, your password has changed, 
-                        if you did not initiate the password change, please visi smh.org and reset the password now.";
-                        $headers = "From: no-reply@smh.org" . "\r\n" . "CC: josh@smh.org";
-                        $try = mail($email,$subject,$message,$headers);
-                        if ($try){
-                            $_SESSION["message"] = "Password Reset Successful, you can now login ";
-                            header("Location: login.php");
-                            die();
-                        }else{
-                            header("Location: login.php");
-                            die();
-                        }
-                        
-                       
-                        
-                    }
+        //check if the user already exists.
+        $userExists = find_user($email);
                 
+        //check if the user already exists.
+               
+        if($userExists){
+                        
+            $currentUser = $email .".json";
+            
+            $userString = file_get_contents("db/users/" . $currentUser);
+        
+            $userObject = json_decode($userString);
+            
+            $userObject->password = password_hash($password, PASSWORD_DEFAULT);
+                        
+            unlink("db/users/" . $currentUser); //delete previous file
+            if($token){
+                unlink("db/tokens/" . $currentUser); //delete previous file
             }
+                        
+            save_user($userObject);
+                        
+
+            //inform user of password reset
             
-            
-    
-        }     
+            $subject = "Password Reset Successful";
+            $message = "Your account on smh has been updated, your password has changed, 
+            if you did not initiate the password change, please visi smh.org and reset the password now.";
+            send_mail($subject,$message,$email);
+            redirect("index.php");
+            die();
+                        
+        }
+                
+           
+    }     
          
-    }else if ($_SESSION['loggedIn']){
-        $allUsers = scandir("db/users");
-        $countAllUsers = count($allUsers);
-
-        for ($counter = 0; $counter < $countAllUsers; $counter++){
-            $currentUser = $allUsers[$counter];
-            if($currentUser == $email .".json"){
-                $userString = file_get_contents("db/users/" . $currentUser);
-                $userObject = json_decode($userString);
-
-                $userObject->password = password_hash($password, PASSWORD_DEFAULT);
-                unlink("db/users/" . $currentUser); //delete previous file
-
-                
-                file_put_contents( "db/users/" . $email . ".json", json_encode($userObject));
-                
-
-                //imform user of password reset
-               
-                $subject = "Password Reset Successful";
-                $message = "Your account on smh has been updated, your password has changed, 
-                if you did not initiate the password change, please visi smh.org and reset the password now.";
-                $headers = "From: no-reply@smh.org" . "\r\n" . "CC: josh@smh.org";
-                $try = mail($email,$subject,$message,$headers);
-                if ($try){
-                    $_SESSION["message"] = "Password Reset Successful, you can now login ";
-                    header("Location: login.php");
-                    die();
-                }else{
-                    header("Location: login.php");
-                    die();
-                }
-                
-               
-                
-            }
-        
-    }
-        
-    }
-    //check if the content of the registered token is the same
-}
-
-
-
-$_SESSION["message"] = "Password Reset Failed, token or email invalid or expired";
-header("Location: login.php");
-die();
+    set_alert("message","Password Reset Failed, token or email invalid or expired");
+    redirect("login.php");
+    die();
 
 }
 ?>

@@ -1,5 +1,8 @@
 <?php
 session_start();
+require_once("functions/users.php");
+require_once("functions/alert.php");
+require_once("functions/redirect.php");
 
 
 //collecting the data
@@ -40,20 +43,20 @@ $_SESSION['department'] = $department;
 // checking error count and displaying appropriate message
 if ($errorCount == 1) {
     //Give feedback to user
-    $_SESSION["error"] = "You have " . $errorCount . " error in your form submission";
-    header("Location: register.php");
+    set_alert("error","You have " . $errorCount . " error in your form submission");
+    redirect("register.php");
 }else if($errorCount > 1){
-    $_SESSION["error"] = "You have " . $errorCount . " errors in your form submission";
-    header("Location: register.php");
+    set_alert("error","You have " . $errorCount . " errors in your form submission");
+    redirect("register.php");
 }
 
 else {
     // count all users
+    // Asign ID to the user
     $allUsers = scandir("db/users");
     $countAllUsers = count($allUsers);
-    $newcountAllUsers = $countAllUsers - 1;
-    // Asign ID to the user,
-    $newUserId = $newcountAllUsers;
+    $newUserId = $countAllUsers - 1;
+    
     // collecting date of registration
     $dateofregistration = date("Y.m.d"); 
 
@@ -69,27 +72,29 @@ else {
         'department' => $department,
         'dateofregistration' => $dateofregistration
     ];
-    
 
+    
     //check if the user already exists.
-    for ($counter = 0; $counter < $countAllUsers; $counter++){
-        $currentUser = $allUsers[$counter];
-        if($currentUser == $email .".json"){
-            $_SESSION["error"] = "Registration Failed, User already exists";
-            header("Location: register.php");
-            die();
-        }
-         
+    $userExists = find_user($email);
+    
+    if($userExists){
+        $error = "Registration Failed, User already exists";
+        set_alert("error",$error);
+        redirect("register.php");
+        die();
     }
 
     //save userobject to database
-    file_put_contents( "db/users/" . $email . ".json", json_encode($userObject));
+   
+    $userObject =  (object)$userObject;
+    save_user($userObject);
     if ($_SESSION['role'] == 'Super Admin'){
-        $_SESSION["message"] = "Registration Successful, " . $first_name . " can now login";
-        header("Location: dashboard.php");
+        set_alert("message","Registration Successful, " . $first_name . " can now login");
+        redirect("index.php");
     }else{
-        $_SESSION["message"] = "Registration Successful, you can now login " . $first_name;
-    header("Location: login.php");
+        $message = "Registration Successful, You can now login, " . $first_name;
+        set_alert("message",$message);
+        redirect("login.php");
     }
     
     

@@ -6,15 +6,14 @@
     if (!is_user_loggedIn()){
     redirect("login.php");
     }
-
     if (!($_SESSION["role"] == "Patients")){
-      redirect("index.php");
-    }
+        redirect("index.php");
+      }
 ?>
 
 <div class="container-fluid">
   <div class="row ">
-    <nav class="col-md-2 d-none vh-100 d-md-block bg-dark  bg-primary sidebar">
+    <nav class="col-md-2 d-none d-md-block bg-dark vh-100  bg-primary sidebar">
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
         <li class="nav-item">
@@ -58,32 +57,43 @@
       </div>
     </nav>
 
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 over">
-  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Patient Dashboard</h1>
-    <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
-  </div>
-  
-  <div class="d-flex justify-content-between">
-    <h3>Welcome <?php echo $_SESSION['fullname'] ?></h3>
-    <div>
-      <p><?php echo $_SESSION["department"] ?> Department</p>
-      <p> <?php echo isset($_SESSION["last-login-date"]) ? "Last login Date : " . $_SESSION["last-login-date"] . " | " . $_SESSION["last-login-time"] : " "; ?></p></p>
-      <p>Date of Registration : <?php echo $_SESSION["date-of-registration"] ?></p>
-      <p>Role : <?php echo $_SESSION["role"] ?></p>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 over">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Appointment Status</h1>
+        <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
+      </div>
       
-    </div>
-    
-    
-  </div>
-  
-  <div class='mx-auto mt-3' style='width: 400px;'>
-        <a class="py-4 px-4 btn btn-primary mr-4" href="bill.php">Pay Bill</a>
-        <a class="py-4 px-4 btn btn-primary" href="book.php">Book Apointment</a>
-  </div>
-  
-  
-</main>
+        <div>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Date of Appointment</th>
+                  <th scope="col">Time of Appointment</th>
+                  <th scope="col">Department</th>
+                  </tr>
+            </thead>
+            <tbody>
+                    <?php
+
+                        $email = $_SESSION["email"];
+                        $appointments = get_appointments($email);
+
+                        for ($counter = 0; $counter < count($appointments); $counter++){
+                            $currentappointment = $appointments[$counter];
+                            echo 
+                            "<tr>
+                              <td> " . $currentappointment->appointment_date . " </td>
+                              <td> " . $currentappointment->appointment_time . "  </td>
+                              <td> " . $currentappointment->department . " </td>
+                             </tr>";
+                        }
+                    
+                    ?>
+              </tbody>
+            </table>
+        </div>
+      
+    </main>
       
 
 <?php include_once("lib/footer.php") ?>

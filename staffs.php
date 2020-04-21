@@ -54,32 +54,51 @@
       </div>
     </nav>
 
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 over">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Admin Dashboard</h1>
-        <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
-      </div>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 over">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Staffs</h1>
+    <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
+  </div>
+  
+  <div>
+    <?php  
+        $staffs = get_staffs();
+        for ($counter = 0; $counter < count($staffs); $counter++){
+            $currentstaff = $staffs[$counter];
+            echo "
+            <div class='bg-primary rounded d-flex justify-content-between mb-3'>
+              <p class='mt-2 ml-2 text-white'>
+              Staff Name : " . $currentstaff->first_name . " " . $currentstaff->last_name .
+              "
+              </p>
+              <button  class='my-2 mr-4 btn btn-primary but'>Show Details</button>
+          </div>
+            <table class='table d-none'>
+            <thead class='thead-dark'>
+                <tr>
+                <th scope='col'>Staff Name</th>
+                <th scope='col'>Email</th>
+                <th scope='col'>Gender</th>
+                <th scope='col'>Role</th>
+                <th scope='col'>Department</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope='row'> " . $currentstaff->first_name . " " . $currentstaff->last_name . " </th>
+                <td> " . $currentstaff->email . " </td>
+                <td> " . $currentstaff->gender . " </td>
+                <td> " . $currentstaff->designation . " </td>
+                <td> " . $currentstaff->department . " </td>
+                </tr>
+            </tbody>
+        </table>
+            ";
+        }
+    ?>
+  </div>
+  
+</main>
       
-      <div class="d-flex justify-content-between">
-        <h3>Welcome <?php echo $_SESSION['fullname'] ?></h3>
-        <div>
-          <p><?php echo $_SESSION["department"] ?> Department</p>
-          <p> <?php echo isset($_SESSION["last-login-date"]) ? "Last login Date : " . $_SESSION["last-login-date"] . " | " . $_SESSION["last-login-time"] : " "; ?></p></p>
-          <p>Date of Registration : <?php echo $_SESSION["date-of-registration"] ?></p>
-          <p>Role : <?php echo $_SESSION["role"] ?></p>
-          
-        </div>
-      </div>
-      
-      <div class='mx-auto mt-3' style='width: 400px;'>
-            <a class="py-4 px-4 btn btn-primary mr-4" href="staffs.php">Show Staffs</a>
-            <a class="py-4 px-4 btn btn-primary" href="patientlist.php">Show Patients</a>
-      </div>
-      
-      
-    </main>
-      
-      
-
 
 <?php include_once("lib/footer.php") ?>

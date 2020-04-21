@@ -54,32 +54,55 @@
       </div>
     </nav>
 
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 over">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Admin Dashboard</h1>
-        <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
-      </div>
-      
-      <div class="d-flex justify-content-between">
-        <h3>Welcome <?php echo $_SESSION['fullname'] ?></h3>
-        <div>
-          <p><?php echo $_SESSION["department"] ?> Department</p>
-          <p> <?php echo isset($_SESSION["last-login-date"]) ? "Last login Date : " . $_SESSION["last-login-date"] . " | " . $_SESSION["last-login-time"] : " "; ?></p></p>
-          <p>Date of Registration : <?php echo $_SESSION["date-of-registration"] ?></p>
-          <p>Role : <?php echo $_SESSION["role"] ?></p>
-          
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 over">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Patients</h1>
+    <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
+  </div>
+  
+  
+  <div>
+    <?php  
+        $patients = get_patients();
+        for ($counter = 0; $counter < count($patients); $counter++){
+            $currentpatient = $patients[$counter];
+            echo "
+
+            <div class='bg-primary rounded d-flex justify-content-between mb-3'>
+            <p class='mt-2 ml-2 text-white'>
+            Patient Name : " . $currentpatient->first_name . " " . $currentpatient->last_name .
+            "
+            </p>
+            <button  class='my-2 mr-4 btn btn-primary but'>Show Details</button>
         </div>
-      </div>
+  
+  
+        <table class='table d-none'>
+            <thead class='thead-dark'>
+                <tr>
+                <th scope='col'>Patient Name</th>
+                    <th scope='col'>Email</th>
+                    <th scope='col'>Gender</th>
+                    <th scope='col'>Role</th>
+                    <th scope='col'>Department</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope='row'> " . $currentpatient->first_name . " " . $currentpatient->last_name . " </th>
+                <td> " . $currentpatient->email . " </td>
+                <td> " . $currentpatient->gender . " </td>
+                <td> " . $currentpatient->designation . " </td>
+                <td> " . $currentpatient->department . " </td>
+                </tr>
+            </tbody>
+        </table>
+        
+            ";
+        }
+    ?>
+  </div>
+  
+</main>
       
-      <div class='mx-auto mt-3' style='width: 400px;'>
-            <a class="py-4 px-4 btn btn-primary mr-4" href="staffs.php">Show Staffs</a>
-            <a class="py-4 px-4 btn btn-primary" href="patientlist.php">Show Patients</a>
-      </div>
-      
-      
-    </main>
-      
-      
-
-
 <?php include_once("lib/footer.php") ?>
