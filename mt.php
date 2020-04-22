@@ -63,7 +63,16 @@
     </div>
   </div>
 
-  <div class='mx-auto mt-3' style='width: 400px;'>
+  <p>
+      <?php
+            print_alert();
+            $_SESSION["message"] = "";
+            $_SESSION["error"] = "";
+            
+        ?>
+    </p>
+
+  <div class='mx-auto mt-3' style='width: 250px;'>
         <a class="py-4 px-4 btn btn-primary mr-4" href="appointment.php">View All Apointments</a>
   </div>
   

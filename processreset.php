@@ -76,8 +76,17 @@ if ($errorCount == 1) {
             $message = "Your account on smh has been updated, your password has changed, 
             if you did not initiate the password change, please visi smh.org and reset the password now.";
             send_mail($subject,$message,$email);
-            redirect("index.php");
-            die();
+            if ($_SESSION['role'] == 'Super Admin'){
+                redirect("dashboard.php");
+                die();
+            }else if ($_SESSION['role'] == 'Medical Team'){
+                redirect("mt.php");
+                die();
+            }else{
+                redirect("patient.php");
+                die();
+            }
+               
                         
         }
                 

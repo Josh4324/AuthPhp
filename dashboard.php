@@ -70,8 +70,17 @@
           
         </div>
       </div>
+
+    <p>
+      <?php
+            print_alert();
+            $_SESSION["message"] = "";
+            $_SESSION["error"] = "";
+            
+        ?>
+    </p>
       
-      <div class='mx-auto mt-3' style='width: 400px;'>
+      <div class='mx-auto mt-3 d-flex justify-content-between' style='width: 400px;'>
             <a class="py-4 px-4 btn btn-primary mr-4" href="staffs.php">Show Staffs</a>
             <a class="py-4 px-4 btn btn-primary" href="patientlist.php">Show Patients</a>
       </div>

@@ -78,6 +78,12 @@ else {
     $userExists = find_user($email);
     
     if($userExists){
+        if ($_SESSION['role'] == 'Super Admin'){
+            $error = "Registration Failed, User already exists";
+            set_alert("error",$error);
+            redirect("adminregister.php");
+            die();
+        }
         $error = "Registration Failed, User already exists";
         set_alert("error",$error);
         redirect("register.php");

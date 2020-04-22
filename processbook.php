@@ -83,7 +83,7 @@ else {
     if you did not initiate the booking, please visi smh.org and reset the password now.";
     send_mail($subject,$message,$email);
     set_alert("message", "Appointment Sent Successfully");
-    redirect("index.php");
+    redirect("patient.php");
     
 }
 

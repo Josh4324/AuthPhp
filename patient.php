@@ -76,10 +76,19 @@
     
     
   </div>
+
+  <p>
+      <?php
+            print_alert();
+            $_SESSION["message"] = "";
+            $_SESSION["error"] = "";
+            
+        ?>
+    </p>
   
-  <div class='mx-auto mt-3' style='width: 400px;'>
-        <a class="py-4 px-4 btn btn-primary mr-4" href="bill.php">Pay Bill</a>
-        <a class="py-4 px-4 btn btn-primary" href="book.php">Book Apointment</a>
+  <div class='mx-auto mt-3 d-flex justify-content-between' style='width: 400px;'>
+        <a class="py-4 px-4 btn btn-primary" href="bill.php">Pay Bill</a>
+        <a class="py-4 px-4 btn btn-primary ml-auto text-left" href="book.php">Book Apointment</a>
   </div>
   
   
