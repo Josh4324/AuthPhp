@@ -6,15 +6,15 @@
     if (!is_user_loggedIn()){
     redirect("login.php");
     }
+
     if (!($_SESSION["role"] == "Patients")){
       redirect("index.php");
     }
-
 ?>
 
 <div class="container-fluid">
   <div class="row ">
-    <nav class="col-md-2 d-none d-md-block bg-dark vh-100  bg-primary sidebar">
+    <nav class="col-md-2 d-none vh-100 d-md-block bg-dark  bg-primary sidebar">
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
         <li class="nav-item">
@@ -37,7 +37,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="status.php">
+            <a class="nav-link" href="book.php">
               <span data-feather="shopping-cart"></span>
               Book Apointment
             </a>
@@ -66,63 +66,47 @@
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 over">
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Book Appointment</h1>
+    <h1 class="h2">Payment History</h1>
     <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
   </div>
-      
-  <form method="POST" action="processbook.php" class="form shadow px-3 pb-3 pt-3">
+  
+  <div>
+  <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Reference</th>
+                  <th scope="col">Currency</th>
+                  </tr>
+            </thead>
+            <tbody>
+                    <?php
 
-    <p class="form-group">
-        <label for="">Date of Appointment</label>
-        <input  class="form-control" required
-        type="Date" name="date" placeholder="Date" 
-       required>
-    </p>
+                        $email = $_SESSION["email"];
+                        $payments = get_payments_history($email);
 
-    <p class="form-group">
-        <label for="">Time of Appointment</label>
-        <input  class="form-control" required
-        type="Time" name="time" placeholder="Time" 
-       required>
-    </p>
+                        for ($counter = 0; $counter < count($payments); $counter++){
+                            $currentpayment = $payments[$counter];
+                            echo 
+                            "<tr>
+                              <td> " . $currentpayment->amount . " </td>
+                              <td> " . $currentpayment->txref . "  </td>
+                              <td> " . $currentpayment->currency . " </td>
+                             </tr>";
+                        }
+                    
+                    ?>
+              </tbody>
+            </table>
+    
+  </div>
 
-    <p class="form-group">
-        <label for="">Nature of Appointment</label>
-        <input required class="form-control" required
-        <?php
-            //display department if saved in session 
-            if(isset($_SESSION['nature'])){
-                echo "value=" . $_SESSION['nature'];
-            } 
-        ?>
-        type="text" name="nature" placeholder="Nature of Appointment" required />
-    </p>
-
-    <p class="form-group">
-        <label for="">Initial Complaint</label>
-        <input required class="form-control" required
-        <?php
-            //display department if saved in session 
-            if(isset($_SESSION['complaint'])){
-                echo "value=" . $_SESSION['complaint'];
-            } 
-        ?>
-        type="text" name="complaint" placeholder="Initial Complaint" required />
-    </p>
-
-    <p class="form-group">
-        <label for="">Department</label>
-        <input required class="form-control" required
-        type="text" name="department" placeholder="Department" required />
-    </p>
-
-    <p class="form-group">
-        <button type="submit" class="form-control bg-primary text-white">Book Appointment</button>
-    </p>
-    </form>
-      
+  
+  
+  
+  
+  
 </main>
-      
       
 
 <?php include_once("lib/footer.php") ?>

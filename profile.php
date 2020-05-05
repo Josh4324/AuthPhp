@@ -52,6 +52,12 @@
                         Patients
                         </a>
                     </li>
+                    <li class='nav-item'>
+                        <a class='nav-link' href='paymentlist.php'>
+                        <span data-feather='users'></span>
+                        Payments
+                        </a>
+                    </li>
                 ";
             }else if($_SESSION["role"] == "Medical Team"){
                 echo "
@@ -81,6 +87,12 @@
                     <a class='nav-link' href='bill.php'>
                     <span data-feather='users'></span>
                     Pay Bill
+                    </a>
+                </li>
+                <li class='nav-item'>
+                    <a class='nav-link' href='ph.php'>
+                    <span data-feather='users'></span>
+                    Payment History
                     </a>
                 </li>
                 

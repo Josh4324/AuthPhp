@@ -50,6 +50,12 @@
               Patients
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="paymentlist.php">
+              <span data-feather="users"></span>
+              Payments
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

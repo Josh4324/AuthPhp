@@ -75,7 +75,6 @@ else {
     
 
     //save appointmentobject to database
-   
     $appointmentObject =  (object)$appointmentObject;
     save_appointment($appointmentObject);
     $subject = "Appointment Booked Successful";

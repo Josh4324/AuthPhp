@@ -2,6 +2,7 @@
     include_once("lib/header.php"); 
     require_once("functions/users.php");
     require_once("functions/redirect.php");
+    require_once("functions/txref.php");
     
     if (!is_user_loggedIn()){
     redirect("login.php");
@@ -10,6 +11,7 @@
       redirect("index.php");
     }
 
+   
 ?>
 
 <div class="container-fluid">
@@ -54,6 +56,12 @@
               Pay Bill
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ph.php">
+              <span data-feather="users"></span>
+              Payment History
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -62,6 +70,104 @@
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Pay Bill</h1>
         <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
+      </div>
+      <div data-response class="data">
+      </div>
+
+      <div class="d-flex flex-row justify-content-between">
+          <div>
+            <h3>Pay With Rave Inline</h3>
+            
+            <form>
+              
+              <p class="form-group">
+                <label for="">Email</label>
+                <input class="form-control" value="<?php if(isset($_SESSION['email'])){
+                echo(!empty($_SESSION['email']) ? $_SESSION['email'] : " ");
+                } ?>"
+                type="text" name="email" id="email" placeholder="Email" >
+              </p>
+
+              <p class="form-group">
+                <label for="">Amount</label>
+                <input class="form-control" 
+                type="text" id="amount" name="amount" placeholder="Amount" 
+                required>
+              </p>
+
+              <p class="form-group">
+                <label for="">Phone Number</label>
+                <input class="form-control" type="text" id="number" name="number" placeholder="Phone Number"  
+                  required>
+              </p>
+
+              <p class="form-group">
+                <label for="">Currency</label>
+                <select class="form-control" id="currency" name="currency" required>
+                <option value="">Select One</option>
+                <option>NGN</option>
+                <option>USD</option>
+              </select>
+              </p>
+
+              <input type="text" id="txref" name="txref" hidden value="
+              <?php
+                echo generate_txref();
+              ?>
+              " >
+              <button type="button" class="form-control submit">Pay Now</button>
+            </form>
+
+            
+          </div>
+
+
+          <div>
+            <h3>Pay with Rave Standard</h3>
+
+            <form method="POST" action="processrave.php">
+              
+              <p class="form-group">
+                <label for="">Email</label>
+                <input class="form-control" value="<?php if(isset($_SESSION['email'])){
+                echo(!empty($_SESSION['email']) ? $_SESSION['email'] : " ");
+                } ?>"
+                type="text" name="email" id="email" placeholder="Email" >
+              </p>
+
+              <p class="form-group">
+                <label for="">Amount</label>
+                <input class="form-control" 
+                type="text" id="amount" name="amount" placeholder="Amount" 
+                required>
+              </p>
+
+              <p class="form-group">
+                <label for="">Phone Number</label>
+                <input class="form-control" type="text" id="number" name="number" placeholder="Phone Number"  
+                  required>
+              </p>
+
+              <p class="form-group">
+                <label for="">Currency</label>
+                <select class="form-control" id="currency" name="currency" required>
+                <option value="">Select One</option>
+                <option>NGN</option>
+                <option>USD</option>
+              </select>
+              </p>
+
+              <input type="text" id="txref" name="txref" hidden value="
+              <?php
+                echo generate_txref();
+              ?>
+              " >
+
+              <button type="submit" class="form-control submit">Pay Now</button>
+            </form>
+
+          </div>
+      
       </div>
       
     

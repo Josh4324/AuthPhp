@@ -155,11 +155,56 @@ function get_patients(){
     return $arr;
 }
 
+function get_payments(){
+    //get all appoitments
+    $allPayment = scandir("db/payments");
+    $payments = filter_files($allPayment);
 
+    $arr = [];
+    $countAllpayment = count($payments);
+    for ($counter = 0; $counter < $countAllpayment; $counter++){
+        $payment = $payments[$counter];
 
+            // get appointment from the database
+            $userPayment = file_get_contents("db/payments/" . $payment);
+            // decode appointment object
+            $userObject = json_decode($userPayment);
+            
+           array_push($arr,$userObject);
+           
+           
+    }
 
+    return $arr;
+}
 
+function get_payments_history($email){
+    //get all appoitments
+    $allPayment = scandir("db/payments");
+    $payments = filter_files($allPayment);
 
+    $arr = [];
+    $countAllpayment = count($payments);
+    for ($counter = 0; $counter < $countAllpayment; $counter++){
+        $payment = $payments[$counter];
+
+            // get appointment from the database
+            $userPayment = file_get_contents("db/payments/" . $payment);
+            // decode appointment object
+            $userObject = json_decode($userPayment);
+
+            
+            if ($userObject ->email == $email){
+                array_push($arr,$userObject);
+            }
+            
+        
+           
+           
+    }
+
+    return $arr;
+}
 
 
 function save_user($userObject){
@@ -168,5 +213,9 @@ function save_user($userObject){
 
 function save_appointment($userObject){
     file_put_contents( "db/appointments/" . $userObject->appointment_id . ".json", json_encode($userObject));
+}
+
+function save_payment($userObject){
+    file_put_contents( "db/payments/" . $userObject->txref . ".json", json_encode($userObject));
 }
 

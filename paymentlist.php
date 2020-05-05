@@ -62,21 +62,22 @@
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 over">
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Patients</h1>
+    <h1 class="h2">Payment List</h1>
     <p>LoggedIn User ID: <?php echo $_SESSION["loggedIn"] ?></p>
   </div>
   
   
   <div>
     <?php  
-        $patients = get_patients();
-        for ($counter = 0; $counter < count($patients); $counter++){
-            $currentpatient = $patients[$counter];
+        $payments = get_payments();
+        
+        for ($counter = 0; $counter < count($payments); $counter++){
+            $currentpayment = $payments[$counter];
             echo "
 
             <div class='bg-primary rounded d-flex justify-content-between mb-3'>
             <p class='mt-2 ml-2 text-white'>
-            Patient Name : " . $currentpatient->first_name . " " . $currentpatient->last_name .
+            Patient Name : " . $currentpayment->fullname . 
             "
             </p>
             <button  class='my-2 mr-4 btn btn-primary but'>Show Details</button>
@@ -87,19 +88,17 @@
             <thead class='thead-dark'>
                 <tr>
                 <th scope='col'>Patient Name</th>
-                    <th scope='col'>Email</th>
-                    <th scope='col'>Gender</th>
-                    <th scope='col'>Role</th>
-                    <th scope='col'>Department</th>
+                    <th scope='col'>Amount</th>
+                    <th scope='col'>Reference number</th>
+                    <th scope='col'>Currency</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                <th scope='row'> " . $currentpatient->first_name . " " . $currentpatient->last_name . " </th>
-                <td> " . $currentpatient->email . " </td>
-                <td> " . $currentpatient->gender . " </td>
-                <td> " . $currentpatient->designation . " </td>
-                <td> " . $currentpatient->department . " </td>
+                <th scope='row'> " . $currentpayment->fullname . " </th>
+                <td> " . $currentpayment->amount . " </td>
+                <td> " . $currentpayment->txref . " </td>
+                <td> " . $currentpayment->currency . " </td>
                 </tr>
             </tbody>
         </table>

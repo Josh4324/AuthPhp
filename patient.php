@@ -54,6 +54,12 @@
               Pay Bill
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ph.php">
+              <span data-feather="users"></span>
+              Payment History
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

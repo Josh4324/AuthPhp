@@ -22,3 +22,24 @@ function send_mail(
     }
 
 }
+
+function send_mail_payment(
+    $subject = "",
+    $message = "",
+    $email = ""
+){
+
+    $headers = "From: no-reply@smh.org" . "\r\n" . "CC: josh@smh.org";
+    
+    $try = mail($email,$subject,$message,$headers);
+    if ($try){
+        //success message
+        set_alert("message", "Payment Successful");
+        redirect("patient.php");
+    }else{
+        //display error message
+        set_alert("error", "Somthing went Wrong, Error sending payment confirmation email");
+        redirect("patient.php");
+    }
+
+}
